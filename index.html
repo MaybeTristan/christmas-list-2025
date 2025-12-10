@@ -5,10 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tristan's Christmas List</title>
 
-<!-- Lexend Font -->
 <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
 
-<!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
   import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
@@ -26,6 +24,159 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
+  const items = [
+    {
+      id: "swedish_fish_bag",
+      name: "Swedish Fish Bag",
+      price: "$8.00",
+      img: "https://m.media-amazon.com/images/I/51Jlys2Z5vL._SS135_.jpg",
+      link: "https://a.co/d/g5AGkDh",
+      category: "Food",
+      prime: true,
+      note: ""
+    },
+    {
+      id: "extra_sweet_watermelon_gum",
+      name: "EXTRA Sweet Watermelon Gum",
+      price: "$21.00",
+      img: "https://m.media-amazon.com/images/I/51+00nx6CKL._SS135_.jpg",
+      link: "https://www.amazon.com/dp/B0BP8531HZ",
+      category: "Food",
+      prime: true,
+      note: ""
+    },
+    {
+      id: "tonys_chocoloney_chocolates_bag",
+      name: "Tony's Chocoloney Chocolates Bag",
+      price: "$7.00",
+      img: "https://m.media-amazon.com/images/I/91xssnphbKL._AC_UL320_.jpg",
+      link: "https://a.co/d/9cDBC8C",
+      category: "Food",
+      prime: false,
+      note: "Some Sellers Offer Prime"
+    },
+    {
+      id: "lotus_biscoff_9_pack",
+      name: "Lotus Biscoff 9 Pack",
+      price: "$20.00",
+      img: "https://m.media-amazon.com/images/I/51BZ2WzohSL._SS135_.jpg",
+      link: "https://www.amazon.com/dp/B0BCL3Y2MM",
+      category: "Food",
+      prime: true,
+      note: "Price May Be Inaccurate"
+    },
+    {
+      id: "tootsie_roll_large_bag",
+      name: "Tootsie Roll Large Bag",
+      price: "$22.00",
+      img: "https://m.media-amazon.com/images/I/61UCY1IODWL._SS135_.jpg",
+      link: "https://a.co/d/cxuDX7I",
+      category: "Food",
+      prime: true,
+      note: "Price May Be Inaccurate"
+    },
+    {
+      id: "grey_fleece_blanket",
+      name: "Grey Fleece Blanket",
+      price: "$10.00",
+      img: "https://m.media-amazon.com/images/I/416HNh9SPJL._SS135_.jpg",
+      link: "https://www.amazon.com/dp/B07YQ2G6SY",
+      category: "Other",
+      prime: true,
+      note: ""
+    },
+    {
+      id: "rtic_navy_blue_tumbler",
+      name: "RTIC Navy Blue Tumbler",
+      price: "$30.50",
+      img: "https://m.media-amazon.com/images/I/314OvkrPOFL._SS135_.jpg",
+      link: "https://www.amazon.com/dp/B0CYV9HQKK",
+      category: "Other",
+      prime: true,
+      note: ""
+    },
+    {
+      id: "uni_kuru_mechanical_pencil_3_pack",
+      name: "UNI KURU Mechanical Pencil 3 Pack",
+      price: "$22.00",
+      img: "https://m.media-amazon.com/images/I/41L0WkQJvFL._SS135_.jpg",
+      link: "https://www.amazon.com/dp/B00TOYALAM",
+      category: "Other",
+      prime: true,
+      note: ""
+    },
+    {
+      id: "otterbox_soft_touch_airpod_case",
+      name: "OtterBox Soft Touch AirPod Case",
+      price: "$10.00",
+      img: "https://m.media-amazon.com/images/I/41zKW3y3F8L._SS135_.jpg",
+      link: "https://www.amazon.com/dp/B0DVTGTCNT",
+      category: "Tech",
+      prime: true,
+      note: ""
+    },
+    {
+      id: "popsocket_magsafe_portable_phone_charger",
+      name: "PopSocket MagSafe Portable Phone Charger",
+      price: "$40.00",
+      img: "https://m.media-amazon.com/images/I/31N7orkUYqL._SS135_.jpg",
+      link: "https://www.amazon.com/dp/B0D62RK6QN",
+      category: "Tech",
+      prime: true,
+      note: ""
+    },
+    {
+      id: "otterbox_defender_case",
+      name: "OtterBox Defender Case",
+      price: "$50.00",
+      img: "https://m.media-amazon.com/images/I/31sHVEBkqqL._SS135_.jpg",
+      link: "https://www.amazon.com/dp/B0DD5LWYBK",
+      category: "Tech",
+      prime: true,
+      note: ""
+    },
+    {
+      id: "anker_nano_charger",
+      name: "Anker Nano Charger",
+      price: "$26.00",
+      img: "https://m.media-amazon.com/images/I/31QbbQWPMML._SS135_.jpg",
+      link: "https://www.amazon.com/dp/B09C5RG6KV",
+      category: "Tech",
+      prime: true,
+      note: "Price May Be Inaccurate"
+    },
+    {
+      id: "carhartt_black_truckers_hat",
+      name: "Carhartt Black Truckers Hat",
+      price: "$25.00",
+      img: "https://m.media-amazon.com/images/I/614DzapddaL._AC_UL320_.jpg",
+      link: "https://a.co/d/5eJnPQR",
+      category: "Clothes",
+      prime: true,
+      note: ""
+    },
+    {
+      id: "uni_qlo_brown_belt",
+      name: "UNI QLO Brown Belt",
+      price: "$30.00",
+      img: "https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/476854/item/goods_37_476854_3x4.jpg?width=300",
+      link: "https://www.uniqlo.com/us/en/products/E476854-000/00?colorDisplayCode=37&sizeDisplayCode=004",
+      category: "Clothes",
+      prime: false,
+      note: "No Prime"
+    },
+    {
+      id: "rei_coop_black_beanie",
+      name: "REI Co-Op Black Beanie",
+      price: "$23.00",
+      img: "https://www.rei.com/media/342a68a6-932b-43df-88b1-ecfe7e8241f7.jpg",
+      link: "https://www.rei.com/product/127061/rei-co-op-lightweight-logo-beanie",
+      category: "Clothes",
+      prime: false,
+      note: "No Prime"
+    }
+  ];
+
   window.claimItem = async function(itemId, link) {
     const itemRef = ref(db, 'items/' + itemId);
     const snapshot = await get(itemRef);
@@ -35,17 +186,81 @@
       return;
     }
 
-    // Mark item as claimed
     await set(itemRef, { claimed: true });
     alert("You claimed this item!");
     window.open(link, "_blank");
+    renderItems();
   }
+
+  function createItemCard(item, claimed) {
+    const div = document.createElement("div");
+    div.className = "item-card";
+    div.style.backgroundColor = claimed ? "#ddd" : "#fff";
+
+    const tagBar = document.createElement("div");
+    tagBar.className = "tag-bar";
+    const catTag = document.createElement("div");
+    catTag.className = "category-tag";
+    catTag.textContent = item.category;
+    tagBar.appendChild(catTag);
+    if (item.prime) {
+      const primeTag = document.createElement("div");
+      primeTag.className = "prime-tag";
+      primeTag.textContent = "Prime ✓";
+      tagBar.appendChild(primeTag);
+    }
+    if (item.note) {
+      const noteTag = document.createElement("div");
+      noteTag.className = "note-tag";
+      noteTag.textContent = item.note;
+      tagBar.appendChild(noteTag);
+    }
+    div.appendChild(tagBar);
+
+    const img = document.createElement("img");
+    img.src = item.img;
+    img.alt = item.name;
+    div.appendChild(img);
+
+    const info = document.createElement("div");
+    info.className = "item-info";
+    const title = document.createElement("h3");
+    title.textContent = item.name;
+    info.appendChild(title);
+    const price = document.createElement("p");
+    price.className = "price";
+    price.textContent = item.price;
+    info.appendChild(price);
+
+    const button = document.createElement("button");
+    button.className = "button" + (claimed ? " disabled" : "");
+    button.textContent = claimed ? "Claimed" : "View Item";
+    if (!claimed) {
+      button.onclick = () => claimItem(item.id, item.link);
+    }
+    info.appendChild(button);
+
+    div.appendChild(info);
+    return div;
+  }
+
+  async function renderItems() {
+    const container = document.querySelector(".grid-container");
+    container.innerHTML = "";
+    for (const item of items) {
+      const snapshot = await get(ref(db, 'items/' + item.id));
+      const claimed = snapshot.exists() ? snapshot.val().claimed : false;
+      container.appendChild(createItemCard(item, claimed));
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", renderItems);
 </script>
 
 <style>
-  body { font-family: 'Lexend', sans-serif; margin: 20px; background: #fefefe; }
+  body { font-family: 'Lexend', sans-serif; margin: 20px; background: #f0f0f0; }
   .grid-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; }
-  .item-card { width: calc(50% - 20px); border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; background: #fff; }
+  .item-card { width: calc(50% - 20px); border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
   .item-card img { width: 100%; height: 200px; object-fit: contain; background: #f9f9f9; }
   .tag-bar { display: flex; gap: 5px; padding: 5px 10px; flex-wrap: wrap; }
   .category-tag, .prime-tag, .note-tag { background-color: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; color: #333; }
@@ -62,160 +277,7 @@
 <body>
 
 <h1>Tristan's Christmas List</h1>
-<div class="grid-container">
-
-  <!-- Item Cards -->
-  <div class="item-card" id="swedish_fish_bag">
-    <div class="tag-bar"><div class="category-tag">Food</div><div class="prime-tag">Prime ✓</div></div>
-    <img src="https://m.media-amazon.com/images/I/51Jlys2Z5vL._SS135_.jpg" alt="Swedish Fish Bag">
-    <div class="item-info">
-      <h3>Swedish Fish Bag</h3>
-      <p class="price">$8.00</p>
-      <button class="button" onclick="claimItem('swedish_fish_bag','https://a.co/d/g5AGkDh')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="extra_sweet_watermelon_gum">
-    <div class="tag-bar"><div class="category-tag">Food</div><div class="prime-tag">Prime ✓</div></div>
-    <img src="https://m.media-amazon.com/images/I/51+00nx6CKL._SS135_.jpg" alt="EXTRA Sweet Watermelon Gum">
-    <div class="item-info">
-      <h3>EXTRA Sweet Watermelon Gum</h3>
-      <p class="price">$21.00</p>
-      <button class="button" onclick="claimItem('extra_sweet_watermelon_gum','https://www.amazon.com/dp/B0BP8531HZ/?coliid=I39V38Z3NLPQ6H&colid=2GXYXWV1Z2A5A&psc=1&ref_=list_c_wl_lv_ov_lig_dp_it')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="tonys_chocoloney_chocolates_bag">
-    <div class="tag-bar"><div class="category-tag">Food</div><div class="note-tag">Some Sellers Offer Prime</div></div>
-    <img src="https://m.media-amazon.com/images/I/91xssnphbKL._AC_UL320_.jpg" alt="Tony's Chocoloney Chocolates Bag">
-    <div class="item-info">
-      <h3>Tony's Chocoloney Chocolates Bag</h3>
-      <p class="price">$7.00</p>
-      <button class="button" onclick="claimItem('tonys_chocoloney_chocolates_bag','https://a.co/d/9cDBC8C')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="lotus_biscoff_9_pack">
-    <div class="tag-bar"><div class="category-tag">Food</div><div class="prime-tag">Prime ✓</div><div class="note-tag">Price May Be Inaccurate</div></div>
-    <img src="https://m.media-amazon.com/images/I/51BZ2WzohSL._SS135_.jpg" alt="Lotus Biscoff 9 Pack">
-    <div class="item-info">
-      <h3>Lotus Biscoff 9 Pack</h3>
-      <p class="price">$20.00</p>
-      <button class="button" onclick="claimItem('lotus_biscoff_9_pack','https://www.amazon.com/dp/B0BCL3Y2MM/?coliid=I3HLVQTOG0LS43&colid=2GXYXWV1Z2A5A&psc=1&ref_=list_c_wl_lv_ov_lig_dp_it')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="tootsie_roll_large_bag">
-    <div class="tag-bar"><div class="category-tag">Food</div><div class="prime-tag">Prime ✓</div><div class="note-tag">Price May Be Inaccurate</div></div>
-    <img src="https://m.media-amazon.com/images/I/61UCY1IODWL._SS135_.jpg" alt="Tootsie Roll Large Bag">
-    <div class="item-info">
-      <h3>Tootsie Roll Large Bag</h3>
-      <p class="price">$22.00</p>
-      <button class="button" onclick="claimItem('tootsie_roll_large_bag','https://a.co/d/cxuDX7I')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="grey_fleece_blanket">
-    <div class="tag-bar"><div class="category-tag">Other</div><div class="prime-tag">Prime ✓</div></div>
-    <img src="https://m.media-amazon.com/images/I/416HNh9SPJL._SS135_.jpg" alt="Grey Fleece Blanket">
-    <div class="item-info">
-      <h3>Grey Fleece Blanket</h3>
-      <p class="price">$10.00</p>
-      <button class="button" onclick="claimItem('grey_fleece_blanket','https://www.amazon.com/dp/B07YQ2G6SY/?coliid=I1PQF6MY4O9UBN&colid=2GXYXWV1Z2A5A&ref_=list_c_wl_lv_ov_lig_dp_it&th=1')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="rtic_navy_blue_tumbler">
-    <div class="tag-bar"><div class="category-tag">Other</div><div class="prime-tag">Prime ✓</div></div>
-    <img src="https://m.media-amazon.com/images/I/314OvkrPOFL._SS135_.jpg" alt="RTIC Navy Blue Tumbler">
-    <div class="item-info">
-      <h3>RTIC Navy Blue Tumbler</h3>
-      <p class="price">$30.50</p>
-      <button class="button" onclick="claimItem('rtic_navy_blue_tumbler','https://www.amazon.com/dp/B0CYV9HQKK?_encoding=UTF8&psc=1&ref=cm_sw_r_cp_ud_dp_W0SG0SDRNA3ZCT8YH5XH')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="uni_kuru_mechanical_pencil_3_pack">
-    <div class="tag-bar"><div class="category-tag">Other</div><div class="prime-tag">Prime ✓</div></div>
-    <img src="https://m.media-amazon.com/images/I/41L0WkQJvFL._SS135_.jpg" alt="UNI KURU Mechanical pencil 3 Pack">
-    <div class="item-info">
-      <h3>UNI KURU Mechanical pencil 3 Pack</h3>
-      <p class="price">$22.00</p>
-      <button class="button" onclick="claimItem('uni_kuru_mechanical_pencil_3_pack','https://www.amazon.com/dp/B00TOYALAM/?coliid=IRV6JMRW57KOI&colid=2GXYXWV1Z2A5A&psc=1&ref_=list_c_wl_lv_ov_lig_dp_it')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="otterbox_soft_touch_airpod_case">
-    <div class="tag-bar"><div class="category-tag">Tech</div><div class="prime-tag">Prime ✓</div></div>
-    <img src="https://m.media-amazon.com/images/I/41zKW3y3F8L._SS135_.jpg" alt="OtterBox Soft Touch AirPod Case">
-    <div class="item-info">
-      <h3>OtterBox Soft Touch AirPod Case</h3>
-      <p class="price">$10.00</p>
-      <button class="button" onclick="claimItem('otterbox_soft_touch_airpod_case','https://www.amazon.com/dp/B0DVTGTCNT/?coliid=I3MP5XQH0YALKU&colid=2GXYXWV1Z2A5A&psc=1&ref_=list_c_wl_lv_ov_lig_dp_it')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="popsocket_magsafe_portable_phone_charger">
-    <div class="tag-bar"><div class="category-tag">Tech</div><div class="prime-tag">Prime ✓</div></div>
-    <img src="https://m.media-amazon.com/images/I/31N7orkUYqL._SS135_.jpg" alt="PopSocket MagSafe Portable Phone Charger">
-    <div class="item-info">
-      <h3>PopSocket MagSafe Portable Phone Charger</h3>
-      <p class="price">$40.00</p>
-      <button class="button" onclick="claimItem('popsocket_magsafe_portable_phone_charger','https://www.amazon.com/dp/B0D62RK6QN/?coliid=I31IYYIHFKEUPX&colid=2GXYXWV1Z2A5A&psc=1&ref_=list_c_wl_lv_ov_lig_dp_it')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="otterbox_defender_case">
-    <div class="tag-bar"><div class="category-tag">Tech</div><div class="prime-tag">Prime ✓</div></div>
-    <img src="https://m.media-amazon.com/images/I/31sHVEBkqqL._SS135_.jpg" alt="OtterBox Defender Case">
-    <div class="item-info">
-      <h3>OtterBox Defender Case</h3>
-      <p class="price">$50.00</p>
-      <button class="button" onclick="claimItem('otterbox_defender_case','https://www.amazon.com/dp/B0DD5LWYBK/?coliid=IEFEXB8CKVWF3&colid=2GXYXWV1Z2A5A&psc=1&ref_=list_c_wl_lv_ov_lig_dp_it')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="anker_nano_charger">
-    <div class="tag-bar"><div class="category-tag">Tech</div><div class="prime-tag">Prime ✓</div><div class="note-tag">Price May Be Inaccurate</div></div>
-    <img src="https://m.media-amazon.com/images/I/31QbbQWPMML._SS135_.jpg" alt="Anker Nano Charger">
-    <div class="item-info">
-      <h3>Anker Nano Charger</h3>
-      <p class="price">$26.00</p>
-      <button class="button" onclick="claimItem('anker_nano_charger','https://www.amazon.com/dp/B09C5RG6KV/?coliid=I3PKWR7G6VSP1U&colid=2GXYXWV1Z2A5A&psc=1&ref_=list_c_wl_lv_ov_lig_dp_it')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="carhartt_black_truckers_hat">
-    <div class="tag-bar"><div class="category-tag">Clothes</div><div class="prime-tag">Prime ✓</div></div>
-    <img src="https://m.media-amazon.com/images/I/614DzapddaL._AC_UL320_.jpg" alt="Carharrt Black Truckers Hat">
-    <div class="item-info">
-      <h3>Carharrt Black Truckers Hat</h3>
-      <p class="price">$25.00</p>
-      <button class="button" onclick="claimItem('carhartt_black_truckers_hat','https://a.co/d/5eJnPQR')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="uni_qlo_brown_belt">
-    <div class="tag-bar"><div class="category-tag">Clothes</div><div class="category-tag">Size: M</div><div class="note-tag">No Prime</div></div>
-    <img src="https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/476854/item/goods_37_476854_3x4.jpg?width=300" alt="UNI QLO Brown Belt">
-    <div class="item-info">
-      <h3>UNI QLO Brown Belt</h3>
-      <p class="price">$30.00</p>
-      <button class="button" onclick="claimItem('uni_qlo_brown_belt','https://www.uniqlo.com/us/en/products/E476854-000/00?colorDisplayCode=37&sizeDisplayCode=004')">View Item</button>
-    </div>
-  </div>
-
-  <div class="item-card" id="rei_coop_black_beanie">
-    <div class="tag-bar"><div class="category-tag">Clothes</div><div class="note-tag">No Prime</div></div>
-    <img src="https://www.rei.com/media/342a68a6-932b-43df-88b1-ecfe7e8241f7.jpg" alt="REI Co-Op Black Beanie">
-    <div class="item-info">
-      <h3>REI Co-Op Black Beanie</h3>
-      <p class="price">$23.00</p>
-      <button class="button" onclick="claimItem('rei_coop_black_beanie','https://www.rei.com/product/127061/rei-co-op-lightweight-logo-beanie')">View Item</button>
-    </div>
-  </div>
-
-</div> <!-- end grid-container -->
+<div class="grid-container"></div>
 
 <div class="footer">
   Merry Christmas! Love from Tristan
