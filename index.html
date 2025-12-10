@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tristan's Christmas List</title>
+
 <!-- Lexend Font -->
 <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
 
@@ -38,7 +45,22 @@
 <style>
   body { font-family: 'Lexend', sans-serif; margin: 20px; background: #fefefe; }
   .grid-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; }
-@@ -30,268 +64,162 @@
+  .item-card { width: calc(50% - 20px); border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; background: #fff; }
+  .item-card img { width: 100%; height: 200px; object-fit: contain; background: #f9f9f9; }
+  .tag-bar { display: flex; gap: 5px; padding: 5px 10px; flex-wrap: wrap; }
+  .category-tag, .prime-tag, .note-tag { background-color: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; color: #333; }
+  .prime-tag { background-color: #d1f0d1; }
+  .note-tag { background-color: #fff4c2; }
+  .item-info { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; }
+  .item-info h3 { margin: 0 0 5px 0; font-size: 1em; }
+  .price { margin: 0 0 10px 0; font-weight: bold; }
+  .button { background-color: #8f2121; color: #fff; text-align: center; padding: 8px; border-radius: 5px; text-decoration: none; font-size: 0.9em; cursor: pointer; }
+  .button.disabled { background-color: #ccc; cursor: default; }
+  .footer { margin-top: 30px; text-align: center; font-size: 0.9em; color: #555; }
+</style>
+</head>
+<body>
+
 <h1>Tristan's Christmas List</h1>
 <div class="grid-container">
 
@@ -192,3 +214,12 @@
       <button class="button" onclick="claimItem('rei_coop_black_beanie','https://www.rei.com/product/127061/rei-co-op-lightweight-logo-beanie')">View Item</button>
     </div>
   </div>
+
+</div> <!-- end grid-container -->
+
+<div class="footer">
+  Merry Christmas! Love from Tristan
+</div>
+
+</body>
+</html>
