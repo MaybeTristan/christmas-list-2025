@@ -8,10 +8,6 @@
 <!-- Lexend Font -->
 <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
 <style>
   body { font-family: 'Lexend', sans-serif; margin: 20px; background: #fefefe; }
   .grid-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; }
@@ -102,7 +98,7 @@
   </div>
 </div>
 
-<!-- Other Items -->
+<!-- Other / Tech / Clothes Items -->
 <div class="item-card" id="grey_fleece_blanket">
   <div class="tag-bar">
     <div class="category-tag">Other</div>
@@ -125,7 +121,7 @@
   <div class="item-info">
     <h3>RTIC Navy Blue Tumbler</h3>
     <p class="price">$30.50</p>
-    <button class="button" onclick="claimItem('rtic_navy_blue_tumbler','https://www.amazon.com/dp/B0CYV9HQKK?_encoding=UTF8&psc=1&ref=cm_sw_r_cp_ud_dp_W0SG0SDRNA3ZCT8YH5XH&ref_=cm_sw_r_cp_ud_dp_W0SG0SDRNA3ZCT8YH5XH&social_share=cm_sw_r_cp_ud_dp_W0SG0SDRNA3ZCT8YH5XH')">View Item</button>
+    <button class="button" onclick="claimItem('rtic_navy_blue_tumbler','https://www.amazon.com/dp/B0CYV9HQKK?_encoding=UTF8&psc=1&ref=cm_sw_r_cp_ud_dp_W0SG0SDRNA3ZCT8YH5XH')">View Item</button>
   </div>
 </div>
 
@@ -241,23 +237,61 @@
   Merry Christmas! Love from Tristan
 </div>
 
-<script>
-  // Initialize Firebase
-  var firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "tristan-christmas-list-2025.firebaseapp.com",
-    databaseURL: "https://tristan-christmas-list-2025-default-rtdb.firebaseio.com/",
-    projectId: "tristan-christmas-list-2025",
-    storageBucket: "tristan-christmas-list-2025.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
-  firebase.initializeApp(firebaseConfig);
-  var db = firebase.database();
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-  function claimItem(itemId, link) {
-    var itemRef = db.ref('items/' + itemId);
-    itemRef.once('value').then(function(snapshot) {
-      if(snapshot.val() && snapshot.val().claimed) {
+  const firebaseConfig = {
+    apiKey: "AIzaSyCvQGB7YP434Ifh1ZqqxxDfYZf8TRzG1sI",
+    authDomain: "tristan-christmas-list-2025.firebaseapp.com",
+    databaseURL: "https://tristan-christmas-list-2025-default-rtdb.firebaseio.com",
+    projectId: "tristan-christmas-list-2025",
+    storageBucket: "tristan-christmas-list-2025.firebasestorage.app",
+    messagingSenderId: "767146275152",
+    appId: "1:767146275152:web:1cd35b6085eab8858cbc55"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  window.claimItem = async function(itemId, link) {
+    const itemRef = ref(db, 'items/' + itemId);
+    try {
+      const snapshot = await get(itemRef);
+      if(snapshot.exists() && snapshot.val().claimed) {
         alert("This item has already been claimed!");
-       
+        return;
+      }
+      window.open(link, "_blank");
+      await set(itemRef, { claimed: true });
+      const btn = document.getElementById(itemId).querySelector('button');
+      btn.classList.add('disabled');
+      btn.innerText = "Claimed!";
+    } catch (err) {
+      console.error(err);
+      alert("Error claiming item. Try again.");
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', async () => {
+    const itemsRef = ref(db, 'items/');
+    try {
+      const snapshot = await get(itemsRef);
+      if(snapshot.exists()) {
+        const items = snapshot.val();
+        Object.keys(items).forEach(id => {
+          const btn = document.getElementById(id)?.querySelector('button');
+          if(items[id].claimed && btn){
+            btn.classList.add('disabled');
+            btn.innerText = "Claimed!";
+          }
+        });
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  });
+</script>
+
+</body>
+</html>
