@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tristan's Christmas List</title>
-<link rel="icon" href="christmasfavicon.ico">
+<link rel="icon" href="christmasfavicon.ico"> <!-- favicon -->
 
 <!-- Lexend Font -->
 <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  const items = [
+  const items = [ <!-- items on the list - info: name = name, price = price, img = image address for item, link = product listing, category = category, which is displayed as a little note, prime = prime avaliabilty, note = notes -->
     {id:"swedish_fish_bag",name:"Swedish Fish Bag",price:"$8.00",img:"https://m.media-amazon.com/images/I/51Jlys2Z5vL._SS135_.jpg",link:"https://a.co/d/g5AGkDh",category:"Food",prime:true,note:""},
     {id:"extra_sweet_watermelon_gum",name:"EXTRA Sweet Watermelon Gum",price:"$21.00",img:"https://m.media-amazon.com/images/I/51+00nx6CKL._SS135_.jpg",link:"https://www.amazon.com/dp/B0BP8531HZ",category:"Food",prime:true,note:""},
     {id:"tonys_chocoloney_chocolates_bag",name:"Tony's Chocoloney Chocolates Bag",price:"$7.00",img:"https://m.media-amazon.com/images/I/91xssnphbKL._AC_UL320_.jpg",link:"https://a.co/d/9cDBC8C",category:"Food",prime:false,note:"Some Sellers Offer Prime"},
@@ -50,17 +50,17 @@
     const itemRef = ref(db, 'items/' + itemId);
     const snapshot = await get(itemRef);
 
-    if (snapshot.exists() && snapshot.val().claimed) {
+    if (snapshot.exists() && snapshot.val().claimed) { <!-- already claimed alert -->
       alert("This item has already been claimed!");
       return;
     }
 
-    await set(itemRef, { claimed: true });
+    await set(itemRef, { claimed: true }); <!-- claim button -->
     alert("You claimed this item!");
     renderItems();
   };
 
-  window.resetSingleItem = async function(itemId) {
+  window.resetSingleItem = async function(itemId) { <!-- reset button for single item, no pin requried, just confrimation -->
     if (!confirm("Are you sure you want to reset this item?")) return;
     await set(ref(db, 'items/' + itemId), { claimed: false });
     alert("This item has been reset!");
@@ -203,7 +203,7 @@
 <div class="grid-container"></div>
 
 <div class="footer">
-  Merry Christmas! Love from Tristan ♡
+  Merry Christmas! Love from Tristan ♡ <!-- footer -->
 </div>
 </body>
 </html>
