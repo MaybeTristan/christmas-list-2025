@@ -179,21 +179,30 @@
     }
   ];
 
-  window.claimItem = async function(itemId, link) {
-    const itemRef = ref(db, 'items/' + itemId);
-    const snapshot = await get(itemRef);
+window.claimItem = async function(itemId, link) {
+  // Open tab *immediately* so Safari thinks it was user-clicked
+  const newTab = window.open("about:blank", "_blank");
 
-    if (snapshot.exists() && snapshot.val().claimed) {
-      alert("This item has already been claimed!");
-      return;
-    }
+  const itemRef = ref(db, 'items/' + itemId);
+  const snapshot = await get(itemRef);
 
-    await set(itemRef, { claimed: true });
-    alert("You claimed this item!");
-    window.open(link, "_blank");
-    renderItems();
+  if (snapshot.exists() && snapshot.val().claimed) {
+    alert("This item has already been claimed!");
+    // If already claimed, redirect tab to the link anyway
+    if (newTab) newTab.location = link;
+    return;
   }
 
+  await set(itemRef, { claimed: true });
+
+  // Success message
+  alert("You claimed this item!");
+
+  // Now redirect the pre-opened tab
+  if (newTab) newTab.location = link;
+
+  renderItems();
+};
   function createItemCard(item, claimed) {
     const div = document.createElement("div");
     div.className = "item-card";
