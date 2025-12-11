@@ -44,9 +44,8 @@
     {id:"rei_coop_black_beanie",name:"REI Co-Op Black Beanie",price:"$23.00",img:"https://www.rei.com/media/342a68a6-932b-43df-88b1-ecfe7e8241f7.jpg",link:"https://www.rei.com/product/127061/rei-co-op-lightweight-logo-beanie",category:"Clothes",prime:false,note:"No Prime"}
   ];
 
-  // Safari-friendly claim
   window.claimItem = async function(itemId, link) {
-    window.open(link, "_blank"); // Open immediately
+    window.open(link, "_blank");
 
     const itemRef = ref(db, 'items/' + itemId);
     const snapshot = await get(itemRef);
@@ -62,11 +61,7 @@
   };
 
   window.resetSingleItem = async function(itemId) {
-    const pin = prompt("Enter 4-digit admin PIN to reset this item:");
-    if (pin !== "3323") {
-      alert("Incorrect PIN.");
-      return;
-    }
+    if (!confirm("Are you sure you want to reset this item?")) return;
     await set(ref(db, 'items/' + itemId), { claimed: false });
     alert("This item has been reset!");
     renderItems();
@@ -154,7 +149,7 @@
       select.value = "";
     });
 
-    // Reset all claims
+    // Reset all claims (PIN protected)
     document.getElementById("resetButton").addEventListener("click", async () => {
       const pin = prompt("Enter 4-digit admin PIN to reset all items:");
       if (pin !== "3323") return alert("Incorrect PIN.");
@@ -188,7 +183,6 @@
 <body>
 <h1>Tristan's Christmas List</h1>
 
-<!-- Reset buttons -->
 <div style="margin-bottom:20px;">
   <button id="resetButton" class="button" style="margin-right:15px;">Reset All Claims</button>
 
@@ -200,7 +194,7 @@
 </div>
 
 <p style="font-size: 1em; color: #555; margin-top: -10px;">
-  If you notice any problems, please fill out the form at 
+  I am aware of the redirect issue, but if you notice any other problems, please let me know at 
   <a href="https://tristanarbet.com/issues" target="_blank">tristanarbet.com/issues</a>
 </p>
 
