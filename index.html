@@ -9,7 +9,6 @@
 <!-- Lexend Font -->
 <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
 
-<!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
   import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
@@ -45,9 +44,9 @@
     {id:"rei_coop_black_beanie",name:"REI Co-Op Black Beanie",price:"$23.00",img:"https://www.rei.com/media/342a68a6-932b-43df-88b1-ecfe7e8241f7.jpg",link:"https://www.rei.com/product/127061/rei-co-op-lightweight-logo-beanie",category:"Clothes",prime:false,note:"No Prime"}
   ];
 
+  // Safari-friendly claim
   window.claimItem = async function(itemId, link) {
-    // Open the actual link immediately for Safari
-    window.open(link, "_blank");
+    window.open(link, "_blank"); // Open immediately
 
     const itemRef = ref(db, 'items/' + itemId);
     const snapshot = await get(itemRef);
@@ -105,9 +104,11 @@
 
     const info = document.createElement("div");
     info.className = "item-info";
+
     const title = document.createElement("h3");
     title.textContent = item.name;
     info.appendChild(title);
+
     const price = document.createElement("p");
     price.className = "price";
     price.textContent = item.price;
@@ -116,17 +117,8 @@
     const button = document.createElement("button");
     button.className = "button" + (claimed ? " disabled" : "");
     button.textContent = claimed ? "Claimed" : "View Item";
-    if (!claimed) {
-      button.onclick = () => claimItem(item.id, item.link);
-    }
+    if (!claimed) button.onclick = () => claimItem(item.id, item.link);
     info.appendChild(button);
-
-    const resetBtn = document.createElement("button");
-    resetBtn.className = "button";
-    resetBtn.textContent = "Reset Item";
-    resetBtn.style.marginTop = "5px";
-    resetBtn.onclick = () => resetSingleItem(item.id);
-    info.appendChild(resetBtn);
 
     div.appendChild(info);
     return div;
@@ -142,26 +134,42 @@
     }
   }
 
-  window.addEventListener("DOMContentLoaded", renderItems);
-
-  const resetAllBtn = document.getElementById("resetButton");
-  resetAllBtn?.addEventListener("click", async () => {
-    const pin = prompt("Enter 4-digit admin PIN to reset all items:");
-    if (pin !== "3323") {
-      alert("Incorrect PIN.");
-      return;
-    }
-    const updates = {};
-    items.forEach(item => { updates['items/' + item.id + '/claimed'] = false; });
-    await update(ref(db), updates);
-    alert("All items have been reset!");
+  window.addEventListener("DOMContentLoaded", () => {
     renderItems();
+
+    // Populate dropdown
+    const select = document.getElementById("singleResetSelect");
+    items.forEach(item => {
+      const option = document.createElement("option");
+      option.value = item.id;
+      option.textContent = item.name;
+      select.appendChild(option);
+    });
+
+    // Reset single item from dropdown
+    document.getElementById("resetSingleButton").addEventListener("click", async () => {
+      const itemId = select.value;
+      if (!itemId) return alert("Please select an item first!");
+      await resetSingleItem(itemId);
+      select.value = "";
+    });
+
+    // Reset all claims
+    document.getElementById("resetButton").addEventListener("click", async () => {
+      const pin = prompt("Enter 4-digit admin PIN to reset all items:");
+      if (pin !== "3323") return alert("Incorrect PIN.");
+      const updates = {};
+      items.forEach(item => { updates['items/' + item.id + '/claimed'] = false; });
+      await update(ref(db), updates);
+      alert("All items have been reset!");
+      renderItems();
+    });
   });
 </script>
 
 <style>
   body { font-family: 'Lexend', sans-serif; margin: 20px; background: #f0f0f0; }
-  .grid-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; margin-bottom: 20px; }
+  .grid-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; }
   .item-card { width: calc(50% - 20px); border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
   .item-card img { width: 100%; height: 200px; object-fit: contain; background: #f9f9f9; }
   .tag-bar { display: flex; gap: 5px; padding: 5px 10px; flex-wrap: wrap; }
@@ -176,23 +184,30 @@
   .footer { margin-top: 30px; text-align: center; font-size: 0.9em; color: #555; }
 </style>
 </head>
-<body>
 
+<body>
 <h1>Tristan's Christmas List</h1>
-<p style="font-size: 1em; color: #555; margin-top: -5px;">
-  If you notice any problems, fill out the form at 
+
+<!-- Reset buttons -->
+<div style="margin-bottom:20px;">
+  <button id="resetButton" class="button" style="margin-right:15px;">Reset All Claims</button>
+
+  <label for="singleResetSelect" style="margin-right:10px;">Reset Specific Item:</label>
+  <select id="singleResetSelect">
+    <option value="">-- Select an item --</option>
+  </select>
+  <button id="resetSingleButton" class="button">Reset Selected Item</button>
+</div>
+
+<p style="font-size: 1em; color: #555; margin-top: -10px;">
+  If you notice any problems, please fill out the form at 
   <a href="https://tristanarbet.com/issues" target="_blank">tristanarbet.com/issues</a>
 </p>
 
-<!-- Reset All Button -->
-<button id="resetButton" class="button" style="margin-bottom:20px;">Reset All Claims</button>
-
-<!-- Container for all items -->
 <div class="grid-container"></div>
 
 <div class="footer">
   Merry Christmas! Love from Tristan ♡
 </div>
-
 </body>
 </html>
