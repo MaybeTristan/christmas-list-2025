@@ -121,13 +121,12 @@
     }
     info.appendChild(button);
 
-    // Add reset single item button
-    const resetButton = document.createElement("button");
-    resetButton.className = "button";
-    resetButton.textContent = "Reset Item";
-    resetButton.style.marginTop = "5px";
-    resetButton.onclick = () => resetSingleItem(item.id);
-    info.appendChild(resetButton);
+    const resetBtn = document.createElement("button");
+    resetBtn.className = "button";
+    resetBtn.textContent = "Reset Item";
+    resetBtn.style.marginTop = "5px";
+    resetBtn.onclick = () => resetSingleItem(item.id);
+    info.appendChild(resetBtn);
 
     div.appendChild(info);
     return div;
@@ -145,7 +144,6 @@
 
   window.addEventListener("DOMContentLoaded", renderItems);
 
-  // Reset All Claims
   const resetAllBtn = document.getElementById("resetButton");
   resetAllBtn?.addEventListener("click", async () => {
     const pin = prompt("Enter 4-digit admin PIN to reset all items:");
@@ -163,7 +161,7 @@
 
 <style>
   body { font-family: 'Lexend', sans-serif; margin: 20px; background: #f0f0f0; }
-  .grid-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; }
+  .grid-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; margin-bottom: 20px; }
   .item-card { width: calc(50% - 20px); border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
   .item-card img { width: 100%; height: 200px; object-fit: contain; background: #f9f9f9; }
   .tag-bar { display: flex; gap: 5px; padding: 5px 10px; flex-wrap: wrap; }
@@ -182,13 +180,19 @@
 
 <h1>Tristan's Christmas List</h1>
 <p style="font-size: 1em; color: #555; margin-top: -5px;">
-  If am aware of the issue with the redirects, if you notice any other issues, please let me know by going to 
+  If you notice any problems, fill out the form at 
   <a href="https://tristanarbet.com/issues" target="_blank">tristanarbet.com/issues</a>
 </p>
+
+<!-- Reset All Button -->
+<button id="resetButton" class="button" style="margin-bottom:20px;">Reset All Claims</button>
+
+<!-- Container for all items -->
+<div class="grid-container"></div>
+
 <div class="footer">
   Merry Christmas! Love from Tristan ♡
 </div>
 
 </body>
 </html>
-
