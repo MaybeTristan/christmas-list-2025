@@ -1,14 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="icon" href="christmasfavicon.ico">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tristan's Christmas List</title>
+<link rel="icon" href="christmasfavicon.ico">
 
 <!-- Lexend Font -->
 <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
 
-<!-- Firebase SDK -->
+<style>
+  body { font-family: 'Lexend', sans-serif; margin: 20px; background: #f0f0f0; }
+  .grid-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; }
+  .item-card { width: calc(50% - 20px); border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+  .item-card img { width: 100%; height: 200px; object-fit: contain; background: #f9f9f9; }
+  .tag-bar { display: flex; gap: 5px; padding: 5px 10px; flex-wrap: wrap; }
+  .category-tag, .prime-tag, .note-tag { background-color: #b0b0b0; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; color: #333; }
+  .prime-tag { background-color: #d1f0d1; }
+  .note-tag { background-color: #fff4c2; }
+  .item-info { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; }
+  .item-info h3 { margin: 0 0 5px 0; font-size: 1em; }
+  .price { margin: 0 0 10px 0; font-weight: bold; }
+  .button { background-color: #8f2121; color: #fff; text-align: center; padding: 8px; border-radius: 5px; text-decoration: none; font-size: 0.9em; cursor: pointer; }
+  .button.disabled { background-color: #ccc; cursor: default; }
+  .footer { margin-top: 30px; text-align: center; font-size: 0.9em; color: #555; }
+  .reset-container { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+  select { padding: 6px; border-radius: 5px; border: 1px solid #999; }
+</style>
+</head>
+<body>
+
+<h1>Tristan's Christmas List</h1>
+
+<div class="reset-container">
+  <button id="resetButton" class="button">Reset All Claims</button>
+  <select id="resetSingleSelect">
+    <option value="">-- Select an item --</option>
+  </select>
+  <button id="resetSingleButton" class="button">Reset Selected Claim</button>
+</div>
+
+<div class="grid-container"></div>
+
+<div class="footer">
+  Merry Christmas! Love from Tristan
+</div>
+
+<!-- Firebase & JS -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
   import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
@@ -27,182 +65,41 @@
   const db = getDatabase(app);
 
   const items = [
-    {
-      id: "swedish_fish_bag",
-      name: "Swedish Fish Bag",
-      price: "$8.00",
-      img: "https://m.media-amazon.com/images/I/51Jlys2Z5vL._SS135_.jpg",
-      link: "https://a.co/d/g5AGkDh",
-      category: "Food",
-      prime: true,
-      note: ""
-    },
-    {
-      id: "extra_sweet_watermelon_gum",
-      name: "EXTRA Sweet Watermelon Gum",
-      price: "$21.00",
-      img: "https://m.media-amazon.com/images/I/51+00nx6CKL._SS135_.jpg",
-      link: "https://www.amazon.com/dp/B0BP8531HZ",
-      category: "Food",
-      prime: true,
-      note: ""
-    },
-    {
-      id: "tonys_chocoloney_chocolates_bag",
-      name: "Tony's Chocoloney Chocolates Bag",
-      price: "$7.00",
-      img: "https://m.media-amazon.com/images/I/91xssnphbKL._AC_UL320_.jpg",
-      link: "https://a.co/d/9cDBC8C",
-      category: "Food",
-      prime: false,
-      note: "Some Sellers Offer Prime"
-    },
-    {
-      id: "lotus_biscoff_9_pack",
-      name: "Lotus Biscoff 9 Pack",
-      price: "$20.00",
-      img: "https://m.media-amazon.com/images/I/51BZ2WzohSL._SS135_.jpg",
-      link: "https://www.amazon.com/dp/B0BCL3Y2MM",
-      category: "Food",
-      prime: true,
-      note: "Price May Be Inaccurate"
-    },
-    {
-      id: "tootsie_roll_large_bag",
-      name: "Tootsie Roll Large Bag",
-      price: "$22.00",
-      img: "https://m.media-amazon.com/images/I/61UCY1IODWL._SS135_.jpg",
-      link: "https://a.co/d/cxuDX7I",
-      category: "Food",
-      prime: true,
-      note: "Price May Be Inaccurate"
-    },
-    {
-      id: "grey_fleece_blanket",
-      name: "Grey Fleece Blanket",
-      price: "$10.00",
-      img: "https://m.media-amazon.com/images/I/416HNh9SPJL._SS135_.jpg",
-      link: "https://www.amazon.com/dp/B07YQ2G6SY",
-      category: "Other",
-      prime: true,
-      note: ""
-    },
-    {
-      id: "rtic_navy_blue_tumbler",
-      name: "RTIC Navy Blue Tumbler",
-      price: "$30.50",
-      img: "https://m.media-amazon.com/images/I/314OvkrPOFL._SS135_.jpg",
-      link: "https://www.amazon.com/dp/B0CYV9HQKK",
-      category: "Other",
-      prime: true,
-      note: ""
-    },
-    {
-      id: "uni_kuru_mechanical_pencil_3_pack",
-      name: "UNI KURU Mechanical Pencil 3 Pack",
-      price: "$22.00",
-      img: "https://m.media-amazon.com/images/I/41L0WkQJvFL._SS135_.jpg",
-      link: "https://www.amazon.com/dp/B00TOYALAM",
-      category: "Other",
-      prime: true,
-      note: ""
-    },
-    {
-      id: "otterbox_soft_touch_airpod_case",
-      name: "OtterBox Soft Touch AirPod Case",
-      price: "$10.00",
-      img: "https://m.media-amazon.com/images/I/41zKW3y3F8L._SS135_.jpg",
-      link: "https://www.amazon.com/dp/B0DVTGTCNT",
-      category: "Tech",
-      prime: true,
-      note: ""
-    },
-    {
-      id: "popsocket_magsafe_portable_phone_charger",
-      name: "PopSocket MagSafe Portable Phone Charger",
-      price: "$40.00",
-      img: "https://m.media-amazon.com/images/I/31N7orkUYqL._SS135_.jpg",
-      link: "https://www.amazon.com/dp/B0D62RK6QN",
-      category: "Tech",
-      prime: true,
-      note: ""
-    },
-    {
-      id: "otterbox_defender_case",
-      name: "OtterBox Defender Case",
-      price: "$50.00",
-      img: "https://m.media-amazon.com/images/I/31sHVEBkqqL._SS135_.jpg",
-      link: "https://www.amazon.com/dp/B0DD5LWYBK",
-      category: "Tech",
-      prime: true,
-      note: ""
-    },
-    {
-      id: "anker_nano_charger",
-      name: "Anker Nano Charger",
-      price: "$26.00",
-      img: "https://m.media-amazon.com/images/I/31QbbQWPMML._SS135_.jpg",
-      link: "https://www.amazon.com/dp/B09C5RG6KV",
-      category: "Tech",
-      prime: true,
-      note: "Price May Be Inaccurate"
-    },
-    {
-      id: "carhartt_black_truckers_hat",
-      name: "Carhartt Black Truckers Hat",
-      price: "$25.00",
-      img: "https://m.media-amazon.com/images/I/614DzapddaL._AC_UL320_.jpg",
-      link: "https://a.co/d/5eJnPQR",
-      category: "Clothes",
-      prime: true,
-      note: ""
-    },
-    {
-      id: "uni_qlo_brown_belt",
-      name: "UNI QLO Brown Belt",
-      price: "$30.00",
-      img: "https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/476854/item/goods_37_476854_3x4.jpg?width=300",
-      link: "https://www.uniqlo.com/us/en/products/E476854-000/00?colorDisplayCode=37&sizeDisplayCode=004",
-      category: "Clothes",
-      prime: false,
-      note: "No Prime"
-    },
-    {
-      id: "rei_coop_black_beanie",
-      name: "REI Co-Op Black Beanie",
-      price: "$23.00",
-      img: "https://www.rei.com/media/342a68a6-932b-43df-88b1-ecfe7e8241f7.jpg",
-      link: "https://www.rei.com/product/127061/rei-co-op-lightweight-logo-beanie",
-      category: "Clothes",
-      prime: false,
-      note: "No Prime"
-    }
+    { id: "swedish_fish_bag", name: "Swedish Fish Bag", price: "$8.00", img: "https://m.media-amazon.com/images/I/51Jlys2Z5vL._SS135_.jpg", link: "https://a.co/d/g5AGkDh", category: "Food", prime: true, note: "" },
+    { id: "extra_sweet_watermelon_gum", name: "EXTRA Sweet Watermelon Gum", price: "$21.00", img: "https://m.media-amazon.com/images/I/51+00nx6CKL._SS135_.jpg", link: "https://www.amazon.com/dp/B0BP8531HZ", category: "Food", prime: true, note: "" },
+    { id: "tonys_chocoloney_chocolates_bag", name: "Tony's Chocoloney Chocolates Bag", price: "$7.00", img: "https://m.media-amazon.com/images/I/91xssnphbKL._AC_UL320_.jpg", link: "https://a.co/d/9cDBC8C", category: "Food", prime: false, note: "Some Sellers Offer Prime" },
+    { id: "lotus_biscoff_9_pack", name: "Lotus Biscoff 9 Pack", price: "$20.00", img: "https://m.media-amazon.com/images/I/51BZ2WzohSL._SS135_.jpg", link: "https://www.amazon.com/dp/B0BCL3Y2MM", category: "Food", prime: true, note: "Price May Be Inaccurate" },
+    { id: "tootsie_roll_large_bag", name: "Tootsie Roll Large Bag", price: "$22.00", img: "https://m.media-amazon.com/images/I/61UCY1IODWL._SS135_.jpg", link: "https://a.co/d/cxuDX7I", category: "Food", prime: true, note: "Price May Be Inaccurate" },
+    { id: "grey_fleece_blanket", name: "Grey Fleece Blanket", price: "$10.00", img: "https://m.media-amazon.com/images/I/416HNh9SPJL._SS135_.jpg", link: "https://www.amazon.com/dp/B07YQ2G6SY", category: "Other", prime: true, note: "" },
+    { id: "rtic_navy_blue_tumbler", name: "RTIC Navy Blue Tumbler", price: "$30.50", img: "https://m.media-amazon.com/images/I/314OvkrPOFL._SS135_.jpg", link: "https://www.amazon.com/dp/B0CYV9HQKK", category: "Other", prime: true, note: "" },
+    { id: "uni_kuru_mechanical_pencil_3_pack", name: "UNI KURU Mechanical Pencil 3 Pack", price: "$22.00", img: "https://m.media-amazon.com/images/I/41L0WkQJvFL._SS135_.jpg", link: "https://www.amazon.com/dp/B00TOYALAM", category: "Other", prime: true, note: "" },
+    { id: "otterbox_soft_touch_airpod_case", name: "OtterBox Soft Touch AirPod Case", price: "$10.00", img: "https://m.media-amazon.com/images/I/41zKW3y3F8L._SS135_.jpg", link: "https://www.amazon.com/dp/B0DVTGTCNT", category: "Tech", prime: true, note: "" },
+    { id: "popsocket_magsafe_portable_phone_charger", name: "PopSocket MagSafe Portable Phone Charger", price: "$40.00", img: "https://m.media-amazon.com/images/I/31N7orkUYqL._SS135_.jpg", link: "https://www.amazon.com/dp/B0D62RK6QN", category: "Tech", prime: true, note: "" },
+    { id: "otterbox_defender_case", name: "OtterBox Defender Case", price: "$50.00", img: "https://m.media-amazon.com/images/I/31sHVEBkqqL._SS135_.jpg", link: "https://www.amazon.com/dp/B0DD5LWYBK", category: "Tech", prime: true, note: "" },
+    { id: "anker_nano_charger", name: "Anker Nano Charger", price: "$26.00", img: "https://m.media-amazon.com/images/I/31QbbQWPMML._SS135_.jpg", link: "https://www.amazon.com/dp/B09C5RG6KV", category: "Tech", prime: true, note: "Price May Be Inaccurate" },
+    { id: "carhartt_black_truckers_hat", name: "Carhartt Black Truckers Hat", price: "$25.00", img: "https://m.media-amazon.com/images/I/614DzapddaL._AC_UL320_.jpg", link: "https://a.co/d/5eJnPQR", category: "Clothes", prime: true, note: "" },
+    { id: "uni_qlo_brown_belt", name: "UNI QLO Brown Belt", price: "$30.00", img: "https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/476854/item/goods_37_476854_3x4.jpg?width=300", link: "https://www.uniqlo.com/us/en/products/E476854-000/00?colorDisplayCode=37&sizeDisplayCode=004", category: "Clothes", prime: false, note: "No Prime" },
+    { id: "rei_coop_black_beanie", name: "REI Co-Op Black Beanie", price: "$23.00", img: "https://www.rei.com/media/342a68a6-932b-43df-88b1-ecfe7e8241f7.jpg", link: "https://www.rei.com/product/127061/rei-co-op-lightweight-logo-beanie", category: "Clothes", prime: false, note: "No Prime" }
   ];
 
-window.claimItem = async function(itemId, link) {
-  // Open tab *immediately* so Safari thinks it was user-clicked
-  const newTab = window.open("about:blank", "_blank");
+  // Safari-friendly claim
+  window.claimItem = function(itemId, link) {
+    const newTab = window.open("about:blank", "_blank");
+    const itemRef = ref(db, 'items/' + itemId);
+    get(itemRef).then(snapshot => {
+      if (snapshot.exists() && snapshot.val().claimed) {
+        alert("This item has already been claimed!");
+        if (newTab) newTab.location = link;
+        return;
+      }
+      set(itemRef, { claimed: true }).then(() => {
+        alert("You claimed this item!");
+        if (newTab) newTab.location = link;
+        renderItems();
+      }).catch(err => { alert("Error: "+err); if(newTab)newTab.close(); });
+    });
+  };
 
-  const itemRef = ref(db, 'items/' + itemId);
-  const snapshot = await get(itemRef);
-
-  if (snapshot.exists() && snapshot.val().claimed) {
-    alert("This item has already been claimed!");
-    // If already claimed, redirect tab to the link anyway
-    if (newTab) newTab.location = link;
-    return;
-  }
-
-  await set(itemRef, { claimed: true });
-
-  // Success message
-  alert("You claimed this item!");
-
-  // Now redirect the pre-opened tab
-  if (newTab) newTab.location = link;
-
-  renderItems();
-};
   function createItemCard(item, claimed) {
     const div = document.createElement("div");
     div.className = "item-card";
@@ -214,44 +111,20 @@ window.claimItem = async function(itemId, link) {
     catTag.className = "category-tag";
     catTag.textContent = item.category;
     tagBar.appendChild(catTag);
-    if (item.prime) {
-      const primeTag = document.createElement("div");
-      primeTag.className = "prime-tag";
-      primeTag.textContent = "Prime ✓";
-      tagBar.appendChild(primeTag);
-    }
-    if (item.note) {
-      const noteTag = document.createElement("div");
-      noteTag.className = "note-tag";
-      noteTag.textContent = item.note;
-      tagBar.appendChild(noteTag);
-    }
+    if (item.prime) { const primeTag = document.createElement("div"); primeTag.className = "prime-tag"; primeTag.textContent = "Prime ✓"; tagBar.appendChild(primeTag); }
+    if (item.note) { const noteTag = document.createElement("div"); noteTag.className = "note-tag"; noteTag.textContent = item.note; tagBar.appendChild(noteTag); }
     div.appendChild(tagBar);
 
-    const img = document.createElement("img");
-    img.src = item.img;
-    img.alt = item.name;
-    div.appendChild(img);
+    const img = document.createElement("img"); img.src = item.img; img.alt = item.name; div.appendChild(img);
 
-    const info = document.createElement("div");
-    info.className = "item-info";
-    const title = document.createElement("h3");
-    title.textContent = item.name;
-    info.appendChild(title);
-    const price = document.createElement("p");
-    price.className = "price";
-    price.textContent = item.price;
-    info.appendChild(price);
-
+    const info = document.createElement("div"); info.className = "item-info";
+    const title = document.createElement("h3"); title.textContent = item.name; info.appendChild(title);
+    const price = document.createElement("p"); price.className = "price"; price.textContent = item.price; info.appendChild(price);
     const button = document.createElement("button");
-    button.className = "button" + (claimed ? " disabled" : "");
-    button.textContent = claimed ? "Claimed" : "View Item";
-    if (!claimed) {
-      button.onclick = () => claimItem(item.id, item.link);
-    }
-    info.appendChild(button);
+    button.className = "button" + (claimed?" disabled":""); button.textContent = claimed?"Claimed":"View Item";
+    if(!claimed) button.onclick = ()=>claimItem(item.id, item.link);
+    info.appendChild(button); div.appendChild(info);
 
-    div.appendChild(info);
     return div;
   }
 
@@ -260,55 +133,35 @@ window.claimItem = async function(itemId, link) {
     container.innerHTML = "";
     for (const item of items) {
       const snapshot = await get(ref(db, 'items/' + item.id));
-      const claimed = snapshot.exists() ? snapshot.val().claimed : false;
+      const claimed = snapshot.exists()?snapshot.val().claimed:false;
       container.appendChild(createItemCard(item, claimed));
     }
+
+    const select = document.getElementById("resetSingleSelect");
+    select.innerHTML = '<option value="">-- Select an item --</option>';
+    items.forEach(i=>{ const opt = document.createElement("option"); opt.value=i.id; opt.textContent=i.name; select.appendChild(opt); });
   }
 
-  // Reset with hidden PIN
-  const resetButton = document.getElementById("resetButton");
-  resetButton.addEventListener("click", async () => {
+  document.getElementById("resetButton").addEventListener("click", async ()=>{
     const pin = prompt("Enter 4-digit admin PIN to reset:");
-    if (pin === "3323") {
-      const updates = {};
-      items.forEach(item => { updates['items/' + item.id + '/claimed'] = false; });
-      await update(ref(db), updates);
-      renderItems();
-      alert("All items have been reset!");
-    } else {
-      alert("Incorrect PIN.");
-    }
+    if(pin==="3323"){
+      const updates={}; items.forEach(i=>{ updates['items/'+i.id+'/claimed']=false; });
+      await update(ref(db), updates); renderItems(); alert("All items reset!"); 
+    } else alert("Incorrect PIN.");
+  });
+
+  document.getElementById("resetSingleButton").addEventListener("click", async ()=>{
+    const select = document.getElementById("resetSingleSelect");
+    const itemId = select.value;
+    if(!itemId) return alert("Please select an item to reset!");
+    await set(ref(db,'items/'+itemId), {claimed:false});
+    alert(`"${select.options[select.selectedIndex].text}" has been reset!`);
+    renderItems();
   });
 
   window.addEventListener("DOMContentLoaded", renderItems);
+
 </script>
-
-<style>
-  body { font-family: 'Lexend', sans-serif; margin: 20px; background: #f0f0f0; }
-  .grid-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; }
-  .item-card { width: calc(50% - 20px); border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-  .item-card img { width: 100%; height: 200px; object-fit: contain; background: #f9f9f9; }
-  .tag-bar { display: flex; gap: 5px; padding: 5px 10px; flex-wrap: wrap; }
-  .category-tag, .prime-tag, .note-tag { background-color: #b0b0b0; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; color: #333; }
-  .prime-tag { background-color: #d1f0d1; }
-  .note-tag { background-color: #fff4c2; }
-  .item-info { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; }
-  .item-info h3 { margin: 0 0 5px 0; font-size: 1em; }
-  .price { margin: 0 0 10px 0; font-weight: bold; }
-  .button { background-color: #8f2121; color: #fff; text-align: center; padding: 8px; border-radius: 5px; text-decoration: none; font-size: 0.9em; cursor: pointer; }
-  .button.disabled { background-color: #ccc; cursor: default; }
-  .footer { margin-top: 30px; text-align: center; font-size: 0.9em; color: #555; }
-</style>
-</head>
-<body>
-
-<h1>Tristan's Christmas List</h1>
-<button id="resetButton" class="button" style="margin-bottom:20px;">Reset All Claims</button>
-<div class="grid-container"></div>
-
-<div class="footer">
-  Merry Christmas! Love from Tristan
-</div>
 
 </body>
 </html>
